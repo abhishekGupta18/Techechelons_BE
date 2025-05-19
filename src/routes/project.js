@@ -57,4 +57,34 @@ projectRouter.delete("/project/delete/:id", async (req, res) => {
   }
 });
 
+projectRouter.get("/allProjects", async (req, res) => {
+  try {
+    const allProjects = await Project.find({}).sort({ createdAt: -1 });
+    res
+      .status(201)
+      .json({ msg: "ALl project fetched successfully", data: allProjects });
+  } catch (e) {
+    res.status(400).json({ error: "can't fetch all the projects" + e.message });
+  }
+});
+
+projectRouter.get("/projects/search", async (req, res) => {
+  try {
+    const searchText = req.query.q || "";
+
+    const projects = await Project.find({
+      $or: [
+        { projectName: { $regex: searchText, $options: "i" } },
+        { description: { $regex: searchText, $options: "i" } },
+      ],
+    });
+
+    res
+      .status(200)
+      .json({ msg: "Projects fetched successfully", data: projects });
+  } catch (e) {
+    res.status(400).json({ error: "Can't fetch the projects: " + e.message });
+  }
+});
+
 module.exports = projectRouter;
