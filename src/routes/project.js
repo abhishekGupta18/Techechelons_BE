@@ -70,14 +70,22 @@ projectRouter.get("/allProjects", async (req, res) => {
 
 projectRouter.get("/projects/search", async (req, res) => {
   try {
-    const searchText = req.query.q || "";
+    const searchText = req.query.q;
 
-    const projects = await Project.find({
-      $or: [
-        { projectName: { $regex: searchText, $options: "i" } },
-        { description: { $regex: searchText, $options: "i" } },
-      ],
-    });
+    let projects;
+
+    if (!searchText) {
+      // No search query: return all projects
+      projects = await Project.find({});
+    } else {
+      // Search with regex
+      projects = await Project.find({
+        $or: [
+          { projectName: { $regex: searchText, $options: "i" } },
+          { description: { $regex: searchText, $options: "i" } },
+        ],
+      });
+    }
 
     res
       .status(200)

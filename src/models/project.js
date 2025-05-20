@@ -19,7 +19,7 @@ const projectSchema = new mongoose.Schema(
       type: [String],
     },
     members: {
-      type: Number,
+      type: String,
       required: true,
     },
     isActive: {
