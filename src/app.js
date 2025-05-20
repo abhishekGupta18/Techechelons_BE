@@ -31,6 +31,14 @@ app.use(express.json());
 
 app.use("/", projectRouter);
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "Backend is Running!",
+    timestamp: new Date().toISOString(),
+    status: "healthy",
+  });
+});
+
 connectDB()
   .then(() => {
     console.log("Database connected successfully!");
